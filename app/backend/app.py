@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 from pymongo import MongoClient
 
@@ -9,20 +9,19 @@ client = MongoClient("mongodb://mongo:27017/")
 db = client["userdb"]
 collection = db["users"]
 
-# Insert example data if collection is empty
-if collection.count_documents({}) == 0:
-    collection.insert_many([
-        {"name": "Alice"},
-        {"name": "Bob"},
-        {"name": "Charlie"}
-    ])
-
 # Prometheus metric
 REQUEST_COUNT = Counter("app_requests_total", "Total requests count", ["endpoint"])
 
-@app.route("/users")
-def get_users():
+@app.route("/users", methods=["GET", "POST"])
+def users():
     REQUEST_COUNT.labels("/users").inc()
+    if request.method == "POST":
+        data = request.get_json()
+        name = data.get("name")
+        if not name:
+            return {"error": "Name is required"}, 400
+        collection.insert_one({"name": name})
+        return {"message": f"User '{name}' added successfully!"}, 201
     users = [user["name"] for user in collection.find()]
     return jsonify(users)
 
@@ -32,7 +31,7 @@ def metrics():
 
 @app.route("/")
 def helloworld():    
-    return "hello world!"
+    return "Hello World!"
 
 @app.route("/health")
 def health():
