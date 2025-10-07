@@ -30,6 +30,10 @@ def get_users():
 def metrics():
     return generate_latest(), 200, {"Content-Type": CONTENT_TYPE_LATEST}
 
+@app.route("/")
+def helloworld():    
+    return "hello world!"
+
 @app.route("/health")
 def health():
     REQUEST_COUNT.labels("/health").inc()

@@ -15,6 +15,7 @@ spec:
       containers:
       - name: backend
         image: qday12/microservices-monitoring-backend:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:
