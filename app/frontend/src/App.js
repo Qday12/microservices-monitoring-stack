@@ -6,14 +6,14 @@ function App() {
   const [message, setMessage] = useState("");
 
   const fetchUsers = async () => {
-    const res = await fetch("/api/users");
+    const res = await fetch("/users");
     const data = await res.json();
     setUsers(data);
   };
 
   const addUser = async (e) => {
-    e.preventDefault();
-    const res = await fetch("/api/users", {
+    e.preventDefault();o
+    const res = await fetch("/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name }),
