@@ -12,7 +12,7 @@ function App() {
   };
 
   const addUser = async (e) => {
-    e.preventDefault();o
+    e.preventDefault();
     const res = await fetch("/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
